@@ -25,7 +25,7 @@
 //                 Kyle Scully <https://github.com/zieka>
 //                 Cong Zhang <https://github.com/dancerphil>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-import type jsx from './jsx.d.ts';
+import type * as jsx from './jsx.d.ts';
 
 export * as JSX from './jsx.d.ts';
 export * as React from './react_esm.d.ts';

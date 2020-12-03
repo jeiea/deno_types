@@ -1,6 +1,6 @@
 import type * as CSS from '../../csstype/v3.0.2/csstype.d.ts';
 import type * as PropTypes from '../../prop-types/v15.7.2/prop-types.d.ts';
-import type JSX from './jsx.d.ts';
+import type * as JSX from './jsx.d.ts';
 import type from './react_global.d.ts';
 
 //
@@ -69,8 +69,7 @@ export interface ReactComponentElement<
  */
 export type SFCElement<P> = FunctionComponentElement<P>;
 
-export interface FunctionComponentElement<P>
-  extends ReactElement<P, FunctionComponent<P>> {
+export interface FunctionComponentElement<P> extends ReactElement<P, FunctionComponent<P>> {
   ref?: 'ref' extends keyof P ? (P extends { ref?: infer R } ? R : never) : never;
 }
 
@@ -83,10 +82,8 @@ export interface ComponentElement<P, T extends Component<P, ComponentState>>
 export type ClassicElement<P> = CElement<P, ClassicComponent<P, ComponentState>>;
 
 // string fallback for custom web-components
-export interface DOMElement<
-  P extends HTMLAttributes<T> | SVGAttributes<T>,
-  T extends Element
-> extends ReactElement<P, string> {
+export interface DOMElement<P extends HTMLAttributes<T> | SVGAttributes<T>, T extends Element>
+  extends ReactElement<P, string> {
   ref: LegacyRef<T>;
 }
 
@@ -95,16 +92,13 @@ export interface DOMElement<
 export interface ReactHTMLElement<T extends HTMLElement>
   extends DetailedReactHTMLElement<AllHTMLAttributes<T>, T> {}
 
-export interface DetailedReactHTMLElement<
-  P extends HTMLAttributes<T>,
-  T extends HTMLElement
-> extends DOMElement<P, T> {
+export interface DetailedReactHTMLElement<P extends HTMLAttributes<T>, T extends HTMLElement>
+  extends DOMElement<P, T> {
   type: keyof ReactHTML;
 }
 
 // ReactSVG for ReactSVGElement
-export interface ReactSVGElement
-  extends DOMElement<SVGAttributes<SVGElement>, SVGElement> {
+export interface ReactSVGElement extends DOMElement<SVGAttributes<SVGElement>, SVGElement> {
   type: keyof ReactSVG;
 }
 
@@ -117,10 +111,7 @@ export interface ReactPortal extends ReactElement {
 // Factories
 // ----------------------------------------------------------------------
 
-export type Factory<P> = (
-  props?: Attributes & P,
-  ...children: ReactNode[]
-) => ReactElement<P>;
+export type Factory<P> = (props?: Attributes & P, ...children: ReactNode[]) => ReactElement<P>;
 
 /**
  * @deprecated Please use `FunctionComponentFactory`
@@ -151,10 +142,10 @@ export interface HTMLFactory<T extends HTMLElement>
 
 export interface DetailedHTMLFactory<P extends HTMLAttributes<T>, T extends HTMLElement>
   extends DOMFactory<P, T> {
-  (
-    props?: (ClassAttributes<T> & P) | null,
-    ...children: ReactNode[]
-  ): DetailedReactHTMLElement<P, T>;
+  (props?: (ClassAttributes<T> & P) | null, ...children: ReactNode[]): DetailedReactHTMLElement<
+    P,
+    T
+  >;
 }
 
 export interface SVGFactory extends DOMFactory<SVGAttributes<SVGElement>, SVGElement> {
@@ -174,22 +165,14 @@ export type ReactChild = ReactElement | ReactText;
 
 export interface ReactNodeArray extends Array<ReactNode> {}
 export type ReactFragment = {} | ReactNodeArray;
-export type ReactNode =
-  | ReactChild
-  | ReactFragment
-  | ReactPortal
-  | boolean
-  | null
-  | undefined;
+export type ReactNode = ReactChild | ReactFragment | ReactPortal | boolean | null | undefined;
 
 //
 // Top Level API
 // ----------------------------------------------------------------------
 
 // DOM Elements
-export function createFactory<T extends HTMLElement>(
-  type: keyof ReactHTML,
-): HTMLFactory<T>;
+export function createFactory<T extends HTMLElement>(type: keyof ReactHTML): HTMLFactory<T>;
 export function createFactory(type: keyof ReactSVG): SVGFactory;
 export function createFactory<P extends DOMAttributes<T>, T extends Element>(
   type: string,
@@ -211,9 +194,7 @@ export function createFactory<P>(type: ComponentClass<P>): Factory<P>;
 // TODO: generalize this to everything in `keyof ReactHTML`, not just "input"
 export function createElement(
   type: 'input',
-  props?:
-    | (InputHTMLAttributes<HTMLInputElement> & ClassAttributes<HTMLInputElement>)
-    | null,
+  props?: (InputHTMLAttributes<HTMLInputElement> & ClassAttributes<HTMLInputElement>) | null,
   ...children: ReactNode[]
 ): DetailedReactHTMLElement<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
 export function createElement<P extends HTMLAttributes<T>, T extends HTMLElement>(
@@ -357,9 +338,7 @@ export function createContext<T>(
   calculateChangedBits?: (prev: T, next: T) => number,
 ): Context<T>;
 
-export function isValidElement<P>(
-  object: {} | null | undefined,
-): object is ReactElement<P>;
+export function isValidElement<P>(object: {} | null | undefined): object is ReactElement<P>;
 
 export const Children: ReactChildren;
 export const Fragment: ExoticComponent<{ children?: ReactNode }>;
@@ -412,8 +391,7 @@ export type ReactInstance = Component<any> | Element;
 
 // Base component for plain JS classes
 // tslint:disable-next-line:no-empty-interface
-export interface Component<P = {}, S = {}, SS = any>
-  extends ComponentLifecycle<P, S, SS> {}
+export interface Component<P = {}, S = {}, SS = any> extends ComponentLifecycle<P, S, SS> {}
 export class Component<P, S> {
   // tslint won't let me format the sample code in a way that vscode likes it :(
   /**
@@ -542,8 +520,7 @@ export interface RefForwardingComponent<T, P = {}> {
   displayName?: string;
 }
 
-export interface ComponentClass<P = {}, S = ComponentState>
-  extends StaticLifecycle<P, S> {
+export interface ComponentClass<P = {}, S = ComponentState> extends StaticLifecycle<P, S> {
   new (props: P, context?: any): Component<P, S>;
   propTypes?: WeakValidationMap<P>;
   contextType?: Context<any>;
@@ -563,11 +540,8 @@ export interface ClassicComponentClass<P = {}> extends ComponentClass<P> {
  * a single argument, which is useful for many top-level API defs.
  * See https://github.com/Microsoft/TypeScript/issues/7234 for more info.
  */
-export type ClassType<
-  P,
-  T extends Component<P, ComponentState>,
-  C extends ComponentClass<P>
-> = C & (new (props: P, context?: any) => T);
+export type ClassType<P, T extends Component<P, ComponentState>, C extends ComponentClass<P>> = C &
+  (new (props: P, context?: any) => T);
 
 //
 // Component Specs and Lifecycle
@@ -593,11 +567,7 @@ export interface ComponentLifecycle<P, S, SS = any>
    * If false is returned, `Component#render`, `componentWillUpdate`
    * and `componentDidUpdate` will not be called.
    */
-  shouldComponentUpdate?(
-    nextProps: Readonly<P>,
-    nextState: Readonly<S>,
-    nextContext: any,
-  ): boolean;
+  shouldComponentUpdate?(nextProps: Readonly<P>, nextState: Readonly<S>, nextContext: any): boolean;
   /**
    * Called immediately before a component is destroyed. Perform any necessary cleanup in this method, such as
    * cancelled network requests, or cleaning up any DOM elements created in `componentDidMount`.
@@ -649,11 +619,7 @@ export interface NewLifecycle<P, S, SS> {
    *
    * The snapshot is only present if getSnapshotBeforeUpdate is present and returns non-null.
    */
-  componentDidUpdate?(
-    prevProps: Readonly<P>,
-    prevState: Readonly<S>,
-    snapshot?: SS,
-  ): void;
+  componentDidUpdate?(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot?: SS): void;
 }
 
 export interface DeprecatedLifecycle<P, S> {
@@ -727,11 +693,7 @@ export interface DeprecatedLifecycle<P, S> {
    * @see https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#reading-dom-properties-before-an-update
    * @see https://reactjs.org/blog/2018/03/27/update-on-async-rendering.html#gradual-migration-path
    */
-  componentWillUpdate?(
-    nextProps: Readonly<P>,
-    nextState: Readonly<S>,
-    nextContext: any,
-  ): void;
+  componentWillUpdate?(nextProps: Readonly<P>, nextState: Readonly<S>, nextContext: any): void;
   /**
    * Called immediately before rendering when new props or state is received. Not called for the initial render.
    *
@@ -816,14 +778,10 @@ export type ComponentProps<
   : T extends keyof JSX.IntrinsicElements
   ? JSX.IntrinsicElements[T]
   : {};
-export type ComponentPropsWithRef<T extends ElementType> = T extends ComponentClass<
-  infer P
->
+export type ComponentPropsWithRef<T extends ElementType> = T extends ComponentClass<infer P>
   ? PropsWithoutRef<P> & RefAttributes<InstanceType<T>>
   : PropsWithRef<ComponentProps<T>>;
-export type ComponentPropsWithoutRef<T extends ElementType> = PropsWithoutRef<
-  ComponentProps<T>
->;
+export type ComponentPropsWithoutRef<T extends ElementType> = PropsWithoutRef<ComponentProps<T>>;
 
 // will show `Memo(${Component.displayName || Component.name})` in devtools by default,
 // but can be given its own specific name
@@ -877,9 +835,7 @@ export type Reducer<S, A> = (prevState: S, action: A) => S;
 export type ReducerWithoutAction<S> = (prevState: S) => S;
 // types used to try and prevent the compiler from reducing S
 // to a supertype common with the second argument to useReducer()
-export type ReducerState<R extends Reducer<any, any>> = R extends Reducer<infer S, any>
-  ? S
-  : never;
+export type ReducerState<R extends Reducer<any, any>> = R extends Reducer<infer S, any> ? S : never;
 export type ReducerAction<R extends Reducer<any, any>> = R extends Reducer<any, infer A>
   ? A
   : never;
@@ -915,9 +871,7 @@ export function useContext<T>(
  * @version 16.8.0
  * @see https://reactjs.org/docs/hooks-reference.html#usestate
  */
-export function useState<S>(
-  initialState: S | (() => S),
-): [S, Dispatch<SetStateAction<S>>];
+export function useState<S>(initialState: S | (() => S)): [S, Dispatch<SetStateAction<S>>];
 // convenience overload when first argument is ommitted
 /**
  * Returns a stateful value, and a function to update it.
@@ -925,10 +879,7 @@ export function useState<S>(
  * @version 16.8.0
  * @see https://reactjs.org/docs/hooks-reference.html#usestate
  */
-export function useState<S = undefined>(): [
-  S | undefined,
-  Dispatch<SetStateAction<S | undefined>>,
-];
+export function useState<S = undefined>(): [S | undefined, Dispatch<SetStateAction<S | undefined>>];
 /**
  * An alternative to `useState`.
  *
@@ -1180,13 +1131,11 @@ export interface BaseSyntheticEvent<E = object, C = any, T = any> {
 export interface SyntheticEvent<T = Element, E = Event>
   extends BaseSyntheticEvent<E, EventTarget & T, EventTarget> {}
 
-export interface ClipboardEvent<T = Element>
-  extends SyntheticEvent<T, NativeClipboardEvent> {
+export interface ClipboardEvent<T = Element> extends SyntheticEvent<T, NativeClipboardEvent> {
   clipboardData: DataTransfer;
 }
 
-export interface CompositionEvent<T = Element>
-  extends SyntheticEvent<T, NativeCompositionEvent> {
+export interface CompositionEvent<T = Element> extends SyntheticEvent<T, NativeCompositionEvent> {
   data: string;
 }
 
@@ -1221,8 +1170,7 @@ export interface ChangeEvent<T = Element> extends SyntheticEvent<T> {
   target: EventTarget & T;
 }
 
-export interface KeyboardEvent<T = Element>
-  extends SyntheticEvent<T, NativeKeyboardEvent> {
+export interface KeyboardEvent<T = Element> extends SyntheticEvent<T, NativeKeyboardEvent> {
   altKey: boolean;
   charCode: number;
   ctrlKey: boolean;
@@ -1243,8 +1191,7 @@ export interface KeyboardEvent<T = Element>
   which: number;
 }
 
-export interface MouseEvent<T = Element, E = NativeMouseEvent>
-  extends SyntheticEvent<T, E> {
+export interface MouseEvent<T = Element, E = NativeMouseEvent> extends SyntheticEvent<T, E> {
   altKey: boolean;
   button: number;
   buttons: number;
@@ -1292,15 +1239,13 @@ export interface WheelEvent<T = Element> extends MouseEvent<T, NativeWheelEvent>
   deltaZ: number;
 }
 
-export interface AnimationEvent<T = Element>
-  extends SyntheticEvent<T, NativeAnimationEvent> {
+export interface AnimationEvent<T = Element> extends SyntheticEvent<T, NativeAnimationEvent> {
   animationName: string;
   elapsedTime: number;
   pseudoElement: string;
 }
 
-export interface TransitionEvent<T = Element>
-  extends SyntheticEvent<T, NativeTransitionEvent> {
+export interface TransitionEvent<T = Element> extends SyntheticEvent<T, NativeTransitionEvent> {
   elapsedTime: number;
   propertyName: string;
   pseudoElement: string;
@@ -1608,15 +1553,7 @@ export interface AriaAttributes {
    */
   'aria-controls'?: string;
   /** Indicates the element that represents the current item within a container or set of related elements. */
-  'aria-current'?:
-    | boolean
-    | 'false'
-    | 'true'
-    | 'page'
-    | 'step'
-    | 'location'
-    | 'date'
-    | 'time';
+  'aria-current'?: boolean | 'false' | 'true' | 'page' | 'step' | 'location' | 'date' | 'time';
   /**
    * Identifies the element (or elements) that describes the object.
    * @see aria-labelledby
@@ -1655,15 +1592,7 @@ export interface AriaAttributes {
    */
   'aria-grabbed'?: boolean | 'false' | 'true';
   /** Indicates the availability and type of interactive popup element, such as menu or dialog, that can be triggered by an element. */
-  'aria-haspopup'?:
-    | boolean
-    | 'false'
-    | 'true'
-    | 'menu'
-    | 'listbox'
-    | 'tree'
-    | 'grid'
-    | 'dialog';
+  'aria-haspopup'?: boolean | 'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog';
   /**
    * Indicates whether the element is exposed to an accessibility API.
    * @see aria-disabled.
@@ -1833,15 +1762,7 @@ export interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
    * Hints at the type of data that might be entered by the user while editing the element or its contents
    * @see https://html.spec.whatwg.org/multipage/interaction.html#input-modalities:-the-inputmode-attribute
    */
-  inputMode?:
-    | 'none'
-    | 'text'
-    | 'tel'
-    | 'url'
-    | 'email'
-    | 'numeric'
-    | 'decimal'
-    | 'search';
+  inputMode?: 'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search';
   /**
    * Specify that a standard HTML element should behave like a defined custom built-in element
    * @see https://html.spec.whatwg.org/multipage/custom-elements.html#attr-is
@@ -2697,10 +2618,7 @@ export interface ReactHTML {
   cite: DetailedHTMLFactory<HTMLAttributes<HTMLElement>, HTMLElement>;
   code: DetailedHTMLFactory<HTMLAttributes<HTMLElement>, HTMLElement>;
   col: DetailedHTMLFactory<ColHTMLAttributes<HTMLTableColElement>, HTMLTableColElement>;
-  colgroup: DetailedHTMLFactory<
-    ColgroupHTMLAttributes<HTMLTableColElement>,
-    HTMLTableColElement
-  >;
+  colgroup: DetailedHTMLFactory<ColgroupHTMLAttributes<HTMLTableColElement>, HTMLTableColElement>;
   data: DetailedHTMLFactory<DataHTMLAttributes<HTMLDataElement>, HTMLDataElement>;
   datalist: DetailedHTMLFactory<HTMLAttributes<HTMLDataListElement>, HTMLDataListElement>;
   dd: DetailedHTMLFactory<HTMLAttributes<HTMLElement>, HTMLElement>;
@@ -2713,10 +2631,7 @@ export interface ReactHTML {
   dt: DetailedHTMLFactory<HTMLAttributes<HTMLElement>, HTMLElement>;
   em: DetailedHTMLFactory<HTMLAttributes<HTMLElement>, HTMLElement>;
   embed: DetailedHTMLFactory<EmbedHTMLAttributes<HTMLEmbedElement>, HTMLEmbedElement>;
-  fieldset: DetailedHTMLFactory<
-    FieldsetHTMLAttributes<HTMLFieldSetElement>,
-    HTMLFieldSetElement
-  >;
+  fieldset: DetailedHTMLFactory<FieldsetHTMLAttributes<HTMLFieldSetElement>, HTMLFieldSetElement>;
   figcaption: DetailedHTMLFactory<HTMLAttributes<HTMLElement>, HTMLElement>;
   figure: DetailedHTMLFactory<HTMLAttributes<HTMLElement>, HTMLElement>;
   footer: DetailedHTMLFactory<HTMLAttributes<HTMLElement>, HTMLElement>;
@@ -2754,20 +2669,14 @@ export interface ReactHTML {
   noscript: DetailedHTMLFactory<HTMLAttributes<HTMLElement>, HTMLElement>;
   object: DetailedHTMLFactory<ObjectHTMLAttributes<HTMLObjectElement>, HTMLObjectElement>;
   ol: DetailedHTMLFactory<OlHTMLAttributes<HTMLOListElement>, HTMLOListElement>;
-  optgroup: DetailedHTMLFactory<
-    OptgroupHTMLAttributes<HTMLOptGroupElement>,
-    HTMLOptGroupElement
-  >;
+  optgroup: DetailedHTMLFactory<OptgroupHTMLAttributes<HTMLOptGroupElement>, HTMLOptGroupElement>;
   option: DetailedHTMLFactory<OptionHTMLAttributes<HTMLOptionElement>, HTMLOptionElement>;
   output: DetailedHTMLFactory<OutputHTMLAttributes<HTMLElement>, HTMLElement>;
   p: DetailedHTMLFactory<HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>;
   param: DetailedHTMLFactory<ParamHTMLAttributes<HTMLParamElement>, HTMLParamElement>;
   picture: DetailedHTMLFactory<HTMLAttributes<HTMLElement>, HTMLElement>;
   pre: DetailedHTMLFactory<HTMLAttributes<HTMLPreElement>, HTMLPreElement>;
-  progress: DetailedHTMLFactory<
-    ProgressHTMLAttributes<HTMLProgressElement>,
-    HTMLProgressElement
-  >;
+  progress: DetailedHTMLFactory<ProgressHTMLAttributes<HTMLProgressElement>, HTMLProgressElement>;
   q: DetailedHTMLFactory<QuoteHTMLAttributes<HTMLQuoteElement>, HTMLQuoteElement>;
   rp: DetailedHTMLFactory<HTMLAttributes<HTMLElement>, HTMLElement>;
   rt: DetailedHTMLFactory<HTMLAttributes<HTMLElement>, HTMLElement>;
@@ -2787,30 +2696,12 @@ export interface ReactHTML {
   sup: DetailedHTMLFactory<HTMLAttributes<HTMLElement>, HTMLElement>;
   table: DetailedHTMLFactory<TableHTMLAttributes<HTMLTableElement>, HTMLTableElement>;
   template: DetailedHTMLFactory<HTMLAttributes<HTMLTemplateElement>, HTMLTemplateElement>;
-  tbody: DetailedHTMLFactory<
-    HTMLAttributes<HTMLTableSectionElement>,
-    HTMLTableSectionElement
-  >;
-  td: DetailedHTMLFactory<
-    TdHTMLAttributes<HTMLTableDataCellElement>,
-    HTMLTableDataCellElement
-  >;
-  textarea: DetailedHTMLFactory<
-    TextareaHTMLAttributes<HTMLTextAreaElement>,
-    HTMLTextAreaElement
-  >;
-  tfoot: DetailedHTMLFactory<
-    HTMLAttributes<HTMLTableSectionElement>,
-    HTMLTableSectionElement
-  >;
-  th: DetailedHTMLFactory<
-    ThHTMLAttributes<HTMLTableHeaderCellElement>,
-    HTMLTableHeaderCellElement
-  >;
-  thead: DetailedHTMLFactory<
-    HTMLAttributes<HTMLTableSectionElement>,
-    HTMLTableSectionElement
-  >;
+  tbody: DetailedHTMLFactory<HTMLAttributes<HTMLTableSectionElement>, HTMLTableSectionElement>;
+  td: DetailedHTMLFactory<TdHTMLAttributes<HTMLTableDataCellElement>, HTMLTableDataCellElement>;
+  textarea: DetailedHTMLFactory<TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>;
+  tfoot: DetailedHTMLFactory<HTMLAttributes<HTMLTableSectionElement>, HTMLTableSectionElement>;
+  th: DetailedHTMLFactory<ThHTMLAttributes<HTMLTableHeaderCellElement>, HTMLTableHeaderCellElement>;
+  thead: DetailedHTMLFactory<HTMLAttributes<HTMLTableSectionElement>, HTMLTableSectionElement>;
   time: DetailedHTMLFactory<TimeHTMLAttributes<HTMLElement>, HTMLElement>;
   title: DetailedHTMLFactory<HTMLAttributes<HTMLTitleElement>, HTMLTitleElement>;
   tr: DetailedHTMLFactory<HTMLAttributes<HTMLTableRowElement>, HTMLTableRowElement>;
@@ -2820,10 +2711,7 @@ export interface ReactHTML {
   var: DetailedHTMLFactory<HTMLAttributes<HTMLElement>, HTMLElement>;
   video: DetailedHTMLFactory<VideoHTMLAttributes<HTMLVideoElement>, HTMLVideoElement>;
   wbr: DetailedHTMLFactory<HTMLAttributes<HTMLElement>, HTMLElement>;
-  webview: DetailedHTMLFactory<
-    WebViewHTMLAttributes<HTMLWebViewElement>,
-    HTMLWebViewElement
-  >;
+  webview: DetailedHTMLFactory<WebViewHTMLAttributes<HTMLWebViewElement>, HTMLWebViewElement>;
 }
 
 export interface ReactSVG {
@@ -2935,9 +2823,7 @@ export interface ReactChildren {
   forEach<C>(children: C | C[], fn: (child: C, index: number) => void): void;
   count(children: any): number;
   only<C>(children: C): C extends any[] ? never : C;
-  toArray(
-    children: ReactNode | ReactNode[],
-  ): Array<Exclude<ReactNode, boolean | null | undefined>>;
+  toArray(children: ReactNode | ReactNode[]): Array<Exclude<ReactNode, boolean | null | undefined>>;
 }
 
 //
