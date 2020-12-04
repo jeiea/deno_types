@@ -47,7 +47,7 @@ export interface RefAttributes<T> extends Attributes {
   ref?: Ref<T>;
 }
 export interface ClassAttributes<T> extends Attributes {
-  ref?: LegacyRef<T>;
+  ref?: LegacyRef<T | undefined>;
 }
 
 export interface ReactElement<
