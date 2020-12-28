@@ -279,4 +279,4 @@ interface JSZip {
 
 declare var JSZip: JSZip;
 
-export default JSZip;
+export { JSZip, JSZip as default };
